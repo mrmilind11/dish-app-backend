@@ -3,3 +3,4 @@ const app = express();
 
 require('./startup/server')(app);
 require('./startup/db')();
+require('./startup/route')(app);
