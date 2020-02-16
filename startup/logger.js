@@ -1,6 +1,6 @@
-const { add, transports } = require('winston')
+const { createLogger, transports } = require('winston')
 module.exports = function () {
-    const logger = add({
+    const logger = createLogger({
         transports: [
             new transports.File({ filename: 'errors.log' }),
             new transports.Console()
