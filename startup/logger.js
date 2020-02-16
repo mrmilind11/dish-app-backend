@@ -1,7 +1,6 @@
-const { winston, transports, createLogger } = require('winston')
+const { add, transports } = require('winston')
 module.exports = function () {
-    const logger = createLogger({
-        level: 'info',
+    const logger = add({
         transports: [
             new transports.File({ filename: 'errors.log' }),
             new transports.Console()
@@ -9,13 +8,12 @@ module.exports = function () {
     })
     logger.exceptions.handle(new transports.File({ filename: 'exceptions.log' }));
 
-
-
     process.on('unhandledRejection', (error) => {
-        winston.error(error);
-        process.exit(1);
+        console.log('error', error);
+        // error(error);
+        // logger.error(new Error(error));
     })
-    process.on('uncaughtException', (error) => {
-        winston.error(error);
+    process.on('uncaughtException', (ex) => {
+        process.exit(1);
     })
 }

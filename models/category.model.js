@@ -7,7 +7,10 @@ const categorySchema = new mongoose.Schema({
     dishCount: { type: Number, default: 0 }
 })
 
+validateNewCategory = function () {
+
+}
+
 const Category = new mongoose.model('category', categorySchema);
 
 module.exports.Category = Category;
-module.exports.categorySchema = categorySchema;
