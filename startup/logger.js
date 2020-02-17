@@ -8,12 +8,8 @@ module.exports = function () {
     })
     logger.exceptions.handle(new transports.File({ filename: 'exceptions.log' }));
 
-    process.on('unhandledRejection', (error) => {
-        console.log('error', error);
-        // error(error);
-        // logger.error(new Error(error));
-    })
     process.on('uncaughtException', (ex) => {
+        console.log(ex);
         process.exit(1);
     })
 }
