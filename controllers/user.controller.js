@@ -3,6 +3,15 @@ const { User, validateLogin, validateSignUp } = require('../models/user.model');
 const { ErrorHandler } = require('../startup/errorHandler');
 const bcryptjs = require('bcryptjs');
 
+const get_current_user = async (req, res, next) => {
+    const userData = req.userData;
+    if (userData) {
+        res.send(userData);
+    }
+    else {
+        return next(new ErrorHandler(403, 'Not logged in'));
+    }
+}
 const get_all_users = async (req, res, next) => {
     const userList = await User.find().select({ '__v': 0 });
     res.send(userList);
@@ -44,6 +53,7 @@ const add_user = async (req, res, next) => {
     }
 };
 
+module.exports.get_current_user = get_current_user;
 module.exports.add_user = add_user;
 module.exports.login_user = login_user;
 module.exports.get_all_users = get_all_users;
