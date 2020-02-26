@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const { ErrorHandler } = require('../startup/errorHandler');
 const { Category, validateNewCategory, validateUpdateCategory } = require('../models/category.model');
+
+const formatCategoryForClient = (data) => {
+    let catForClient = _.cloneDeep(data);
+    delete catForClient['__v'];
+    return catForClient;
+}
 const get_categories_list = async (req, res, next) => {
     try {
         const categoryList = await Category.find().select('-__v')
@@ -28,12 +34,12 @@ const add_category = async (req, res, next) => {
     let newCatData = req.body;
     const { error } = validateNewCategory(newCatData);
     if (error) return next(new ErrorHandler(400, error.details[0].message));
+    newCatData.createdBy = req.userData._id;
     let newCategory = new Category(newCatData);
     newCategory._id = new mongoose.Types.ObjectId();
     try {
         let savedCategory = await newCategory.save();
-        delete savedCategory['__v'];
-        res.send(savedCategory);
+        res.send(formatCategoryForClient(savedCategory));
     }
     catch (error) {
         return next(new ErrorHandler(500, error.message))
@@ -44,8 +50,14 @@ const remove_category = async (req, res, next) => {
     let id = req.query.id;
     if (!mongoose.Types.ObjectId.isValid(id)) return next(new ErrorHandler(400, 'Not a valid id'));
     try {
-        const deletedCat = await Category.findByIdAndDelete(id).select('-__v');
-        res.send(deletedCat);
+        const deletedCat = await Category.findByIdAndDelete(id);
+        if (deletedCat) {
+            res.send(savedCategory(deletedCat));
+        }
+        else {
+            next(new ErrorHandler(500, 'No matching id found'));
+        }
+
     }
     catch (error) {
         return next(new ErrorHandler(500, error.message));

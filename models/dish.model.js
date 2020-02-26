@@ -15,8 +15,8 @@ const DishSchema = new mongoose.Schema({
     ingredientsList: [{ name: { type: String, required: true }, quantity: { type: String, required: true } }],
     steps: [{ type: String }],
     imageUrl: { type: String },
-    categories: [{ type: mongoose.Types.ObjectId, ref: Category }],
-    createdBy: { type: mongoose.Types.ObjectId, ref: User }
+    categories: [{ type: mongoose.Types.ObjectId, ref: 'Category' }],
+    createdBy: { type: mongoose.Types.ObjectId, ref: 'User' }
 })
 const Dish = mongoose.model('dish', DishSchema, 'dish');
 

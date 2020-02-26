@@ -8,9 +8,8 @@ const categorySchema = new mongoose.Schema({
     name: { type: String, unique: true, required: true, trim: true, unique: true },
     description: { type: String, maxlength: 300, trim: true },
     imageUrl: { type: String, trim: true, default: '' },
-    dishCount: { type: Number, default: 0 },
-    dishIdList: [{ type: mongoose.Types.ObjectId, ref: Dish }],
-    createdBy: { type: mongoose.Types.ObjectId, ref: User }
+    dishIdList: [{ type: mongoose.Types.ObjectId, ref: 'Dish' }],
+    createdBy: { type: mongoose.Types.ObjectId, ref: 'User' }
 })
 
 validateNewCategory = function (data) {
@@ -18,7 +17,6 @@ validateNewCategory = function (data) {
         name: Joi.string().min(3).max(50).trim().required(),
         description: Joi.string().min(1).max(250).allow(''),
         imageUrl: Joi.string().max(500).allow(''),
-        dishCount: Joi.number().min(0).max(10000),
         dishIdList: Joi.array(Joi.objectId()),
         createdBy: Joi.objectId()
     })
@@ -30,7 +28,6 @@ validateUpdateCategory = function (data) {
         name: Joi.string().min(3).max(50).trim().required(),
         description: Joi.string().min(1).max(250).allow(''),
         imageUrl: Joi.string().max(500).allow(''),
-        dishCount: Joi.number().min(0).max(10000),
         dishIdList: Joi.array(Joi.objectId()),
         createdBy: Joi.objectId()
     })
